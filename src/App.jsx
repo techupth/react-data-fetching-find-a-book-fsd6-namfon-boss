@@ -17,12 +17,13 @@ function App() {
       );
       setBookList(result.data.items);
     } catch (error) {
-      console.log(error);
+      setBookList([]);
     }
   }
 
   useEffect(() => {
-    getBooks();
+    const timeoutId = setTimeout(getBooks, 500);
+    return () => clearTimeout(timeoutId);
   }, [searchBook]);
 
   return (
@@ -34,12 +35,40 @@ function App() {
         onChange={handleInput}
       ></input>
       <ul>
-        {bookList.map((book) => (
-          <li key={book.id}>{book.volumeInfo.title}</li>
-        ))}
+        {bookList ? (
+          bookList.map((book) => <li key={book.id}>{book.volumeInfo.title}</li>)
+        ) : (
+          <p>
+            Not Found.
+            <br /> Please enter other words.
+          </p>
+        )}
       </ul>
     </div>
   );
 }
+
+// function App() {
+//   const [inputValue, setInputValue] = useState("");
+//   const [debouncedInputValue, setDebouncedInputValue] = useState("");
+
+//   const handleInputChange = (event) => {
+//     setInputValue(event.target.value);
+//   };
+
+//   useEffect(() => {
+//     const timeoutId = setTimeout(() => {
+//       setDebouncedInputValue(inputValue);
+//     }, 1000);
+//     return () => clearTimeout(timeoutId);
+//   }, [inputValue]);
+
+//   return (
+//     <div>
+//       <input type="text" value={inputValue} onChange={handleInputChange} />
+//       <h1>{debouncedInputValue}</h1>
+//     </div>
+//   );
+// }
 
 export default App;
